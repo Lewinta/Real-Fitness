@@ -31,7 +31,11 @@ app_license = "MIT"
 # page_js = {"page" : "public/js/file.js"}
 
 # include js in doctype views
-# doctype_js = {"doctype" : "public/js/doctype.js"}
+doctype_js = {
+	"Patient" : "public/js/patient.js",
+	"Patient Encounter" : "public/js/patient_encounter.js",
+	"POS Opening Shift" : "public/js/pos_opening_shift.js",
+}
 # doctype_list_js = {"doctype" : "public/js/doctype_list.js"}
 # doctype_tree_js = {"doctype" : "public/js/doctype_tree.js"}
 # doctype_calendar_js = {"doctype" : "public/js/doctype_calendar.js"}
@@ -87,21 +91,22 @@ app_license = "MIT"
 # ---------------
 # Override standard doctype classes
 
-# override_doctype_class = {
-#	"ToDo": "custom_app.overrides.CustomToDo"
-# }
+override_doctype_class = {
+	"Custom Field": "real_fitness.controllers.custom_field.CustomField",
+}
 
 # Document Events
 # ---------------
 # Hook on document methods and events
 
-# doc_events = {
-#	"*": {
-#		"on_update": "method",
-#		"on_cancel": "method",
-#		"on_trash": "method"
-#	}
-# }
+doc_events = {
+	"Patient": {
+		"validate": "real_fitness.controllers.patient.patient.validate",
+	},
+	"Sales Invoice": {
+		"validate": "real_fitness.controllers.sales_invoice.sales_invoice.validate",
+	},
+}
 
 # Scheduled Tasks
 # ---------------
@@ -178,4 +183,3 @@ user_data_fields = [
 # auth_hooks = [
 #	"real_fitness.auth.validate"
 # ]
-
