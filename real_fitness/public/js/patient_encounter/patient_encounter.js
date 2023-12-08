@@ -1,6 +1,12 @@
 // Copyright (c) 2023, Miguel Higuera and contributors
 // For license information, please see license.txt
+
+{% include "real_fitness/public/js/patient_encounter/lab_test_editor.js" %}
+
 {
+    function onload(frm) {
+        render_lab_tests(frm);
+    }
 
     function refresh(frm) {
         add_custom_buttons(frm);
@@ -114,11 +120,34 @@
         });
 
         dialog.show();
+    }
+
+    function render_lab_tests(frm) {
+        // render html with the lab tests from LabTestEditor class
+        if (frm.is_new()) {
+            frm.lab_tests_editor.reset();
+        }
+
+        if (!frm.lab_tests_editor) {
+            const lab_test_area = $("<div class='lab-test-area'></div>").appendTo(
+                frm.fields_dict.lab_tests_html.wrapper
+            );
+
+            frm.lab_tests_editor = new fitness.LabTestEditor(
+                lab_test_area,
+                frm,
+                // frm.doc.lab_tests ? 1 : 0
+                true
+            );
+        } else {
+            frm.lab_tests_editor.show();
+        }
 
 
     }
 
     frappe.ui.form.on("Patient Encounter", {
+        onload,
         refresh,
     });
 }

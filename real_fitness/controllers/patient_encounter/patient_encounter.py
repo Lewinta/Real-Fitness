@@ -113,3 +113,13 @@ def get_filename_for_document(patient_encounter, filepath):
     filename = re.sub("-+", "-", filename)
 
     return filename.lower()
+
+
+@frappe.whitelist()
+def get_all_lab_tests(arg=None):
+    """Return all Test Labs"""
+
+    doctype = "Lab Test Template"
+
+    return [d.name for d in frappe.get_all(doctype, fields=["name"])]
+
