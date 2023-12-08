@@ -124,7 +124,7 @@
 
     function render_lab_tests(frm) {
         // render html with the lab tests from LabTestEditor class
-        if (frm.is_new()) {
+        if (frm.is_new() && frm.lab_tests_editor) {
             frm.lab_tests_editor.reset();
         }
 
@@ -137,7 +137,7 @@
                 lab_test_area,
                 frm,
                 // frm.doc.lab_tests ? 1 : 0
-                true
+                false
             );
         } else {
             frm.lab_tests_editor.show();
