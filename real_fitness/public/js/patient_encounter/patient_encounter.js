@@ -12,6 +12,14 @@
         add_custom_buttons(frm);
     }
 
+    function feet(frm) {
+        calculate_imc(frm);
+    }
+
+    function inches(frm) {
+        calculate_imc(frm);
+    }
+
     function add_custom_buttons(frm) {
         add_send_nutritional_plan_button(frm);
     }
@@ -122,6 +130,16 @@
         dialog.show();
     }
 
+    function calculate_imc(frm) {
+        const { doc } = frm;
+
+        if (doc.weight && doc.feet && doc.inches) {
+            const height = doc.feet * 12 + doc.inches;
+            const imc = doc.weight / (height * height) * 703;
+            frm.set_value("imc", imc);
+        }
+    }
+
     function render_lab_tests(frm) {
         // render html with the lab tests from LabTestEditor class
         if (frm.is_new() && frm.lab_tests_editor) {
@@ -149,5 +167,7 @@
     frappe.ui.form.on("Patient Encounter", {
         onload,
         refresh,
+        feet,
+        inches,
     });
 }
