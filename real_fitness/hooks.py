@@ -95,6 +95,23 @@ override_doctype_class = {
 	"Custom Field": "real_fitness.controllers.custom_field.CustomField",
 }
 
+# Fixtures
+# ---------------
+fixtures = [
+    {
+        "dt": "Print Format",
+        "filters": [
+            [
+                "name",
+                "in",
+                [
+                    "Factura POS"
+                ]
+            ]
+        ]
+    },
+]
+
 # Document Events
 # ---------------
 # Hook on document methods and events
