@@ -92,6 +92,7 @@ doctype_js = {
 # Override standard doctype classes
 
 override_doctype_class = {
+	"Warehouse": "real_fitness.controllers.warehouse.Warehouse",
 	"Custom Field": "real_fitness.controllers.custom_field.CustomField",
 }
 
@@ -123,6 +124,9 @@ doc_events = {
 	"Sales Invoice": {
 		"validate": "real_fitness.controllers.sales_invoice.sales_invoice.validate",
 	},
+    "Purchase Invoice":{
+        "validate":"real_fitness.controllers.purchase_invoice.purchase_invoice.validate",
+    },
 }
 
 # Scheduled Tasks
