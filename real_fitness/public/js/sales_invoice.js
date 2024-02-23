@@ -16,7 +16,7 @@
 
     function hide_healthcare_services_button(frm) {
         setTimeout(() => {
-            frm.remove_custom_button("Healthcare Services", "Get Items From");
+            frm.remove_custom_button("Healthcare Services", __("Get Items From"));
         }, 1000);
     }
 
@@ -25,7 +25,7 @@
         const action = () => {
             multiselect_dialog_for_patient_encounter(frm);
         };
-        const group = "Get Items From";
+        const group = __("Get Items From");
 
         frm.add_custom_button(label, action, group);
     }
