@@ -32,9 +32,7 @@ app_license = "MIT"
 
 # include js in doctype views
 doctype_js = {
-	"Patient" : "public/js/patient.js",
-	"Patient Encounter" : "public/js/patient_encounter/patient_encounter.js",
-	"POS Opening Shift" : "public/js/pos_opening_shift.js",
+    "Sales Invoice": "public/js/sales_invoice.js",
 }
 # doctype_list_js = {"doctype" : "public/js/doctype_list.js"}
 # doctype_tree_js = {"doctype" : "public/js/doctype_tree.js"}
@@ -48,7 +46,7 @@ doctype_js = {
 
 # website user home page (by Role)
 # role_home_page = {
-#	"Role": "home_page"
+# "Role": "home_page"
 # }
 
 # Generators
@@ -80,11 +78,11 @@ doctype_js = {
 # Permissions evaluated in scripted ways
 
 # permission_query_conditions = {
-#	"Event": "frappe.desk.doctype.event.event.get_permission_query_conditions",
+# "Event": "frappe.desk.doctype.event.event.get_permission_query_conditions",
 # }
 #
 # has_permission = {
-#	"Event": "frappe.desk.doctype.event.event.has_permission",
+# "Event": "frappe.desk.doctype.event.event.has_permission",
 # }
 
 # DocType Class
@@ -92,8 +90,6 @@ doctype_js = {
 # Override standard doctype classes
 
 override_doctype_class = {
-	"Warehouse": "real_fitness.controllers.warehouse.Warehouse",
-	"Custom Field": "real_fitness.controllers.custom_field.CustomField",
 }
 
 # Fixtures
@@ -118,14 +114,8 @@ fixtures = [
 # Hook on document methods and events
 
 doc_events = {
-	"Patient": {
-		"validate": "real_fitness.controllers.patient.patient.validate",
-	},
-	"Sales Invoice": {
-		"validate": "real_fitness.controllers.sales_invoice.sales_invoice.validate",
-	},
-    "Purchase Invoice":{
-        "validate":"real_fitness.controllers.purchase_invoice.purchase_invoice.validate",
+    "Patient Encounter": {
+        "validate": "real_fitness.controllers.patient_encounter.patient_encounter.validate",
     },
 }
 
@@ -133,21 +123,21 @@ doc_events = {
 # ---------------
 
 # scheduler_events = {
-#	"all": [
-#		"real_fitness.tasks.all"
-#	],
-#	"daily": [
-#		"real_fitness.tasks.daily"
-#	],
-#	"hourly": [
-#		"real_fitness.tasks.hourly"
-#	],
-#	"weekly": [
-#		"real_fitness.tasks.weekly"
-#	]
-#	"monthly": [
-#		"real_fitness.tasks.monthly"
-#	]
+# "all": [
+# "real_fitness.tasks.all"
+# ],
+# "daily": [
+# "real_fitness.tasks.daily"
+# ],
+# "hourly": [
+# "real_fitness.tasks.hourly"
+# ],
+# "weekly": [
+# "real_fitness.tasks.weekly"
+# ]
+# "monthly": [
+# "real_fitness.tasks.monthly"
+# ]
 # }
 
 # Testing
@@ -159,14 +149,14 @@ doc_events = {
 # ------------------------------
 #
 # override_whitelisted_methods = {
-#	"frappe.desk.doctype.event.event.get_events": "real_fitness.event.get_events"
+# "frappe.desk.doctype.event.event.get_events": "real_fitness.event.get_events"
 # }
 #
 # each overriding function accepts a `data` argument;
 # generated from the base implementation of the doctype dashboard,
 # along with any modifications made in other Frappe apps
 # override_doctype_dashboards = {
-#	"Task": "real_fitness.task.get_dashboard_data"
+# "Task": "real_fitness.task.get_dashboard_data"
 # }
 
 # exempt linked doctypes from being automatically cancelled
@@ -177,30 +167,10 @@ doc_events = {
 # User Data Protection
 # --------------------
 
-user_data_fields = [
-	{
-		"doctype": "{doctype_1}",
-		"filter_by": "{filter_by}",
-		"redact_fields": ["{field_1}", "{field_2}"],
-		"partial": 1,
-	},
-	{
-		"doctype": "{doctype_2}",
-		"filter_by": "{filter_by}",
-		"partial": 1,
-	},
-	{
-		"doctype": "{doctype_3}",
-		"strict": False,
-	},
-	{
-		"doctype": "{doctype_4}"
-	}
-]
 
 # Authentication and authorization
 # --------------------------------
 
 # auth_hooks = [
-#	"real_fitness.auth.validate"
+# "real_fitness.auth.validate"
 # ]

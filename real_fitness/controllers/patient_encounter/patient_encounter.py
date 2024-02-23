@@ -8,6 +8,17 @@ import frappe
 from frappe import _
 
 
+def validate(doc, method=None):
+    set_encounter_date_in_date_rows(doc)
+
+
+def set_encounter_date_in_date_rows(doc):
+    if doc.procedure_prescription:
+        for row in doc.procedure_prescription:
+            if not row.date:
+                row.date = doc.encounter_date
+
+
 @frappe.whitelist()
 def send_nutritional_plan(patient_encounter, nutritional_plan):
     _send_nutritrional_plan(patient_encounter, nutritional_plan)
@@ -122,4 +133,3 @@ def get_all_lab_tests(arg=None):
     doctype = "Lab Test Template"
 
     return [d.name for d in frappe.get_all(doctype, fields=["name"])]
-
