@@ -1,0 +1,45 @@
+{
+ "actions": [],
+ "autoname": "autoincrement",
+ "creation": "2024-02-19 09:51:45.839532",
+ "default_view": "List",
+ "doctype": "DocType",
+ "editable_grid": 1,
+ "engine": "InnoDB",
+ "field_order": [
+  "user",
+  "privileges"
+ ],
+ "fields": [
+  {
+   "fieldname": "user",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "label": "User",
+   "options": "User",
+   "reqd": 1
+  },
+  {
+   "default": "Non-Privileged",
+   "fieldname": "privileges",
+   "fieldtype": "Select",
+   "in_list_view": 1,
+   "label": "Privileges",
+   "options": "Non-Privileged\nPrivileged",
+   "reqd": 1
+  }
+ ],
+ "index_web_pages_for_search": 1,
+ "istable": 1,
+ "links": [],
+ "modified": "2024-02-19 10:04:54.751572",
+ "modified_by": "Administrator",
+ "module": "Real Fitness",
+ "name": "Warehouse Staff",
+ "naming_rule": "Autoincrement",
+ "owner": "Administrator",
+ "permissions": [],
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "states": []
+}

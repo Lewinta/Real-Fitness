@@ -32,7 +32,12 @@ app_license = "MIT"
 
 # include js in doctype views
 doctype_js = {
+    "Patient": "public/js/patient.js",
+    "Patient Encounter": "public/js/patient_encounter/patient_encounter.js",
+    "POS Opening Shift": "public/js/pos_opening_shift.js",
+    "Purchase Invoice": "public/js/purchase_invoice.js",
     "Sales Invoice": "public/js/sales_invoice.js",
+    "Stock Entry": "public/js/stock_entry.js",
 }
 # doctype_list_js = {"doctype" : "public/js/doctype_list.js"}
 # doctype_tree_js = {"doctype" : "public/js/doctype_tree.js"}
@@ -90,6 +95,9 @@ doctype_js = {
 # Override standard doctype classes
 
 override_doctype_class = {
+    "Stock Entry": "real_fitness.controllers.stock_entry.StockEntry",
+    "Warehouse": "real_fitness.controllers.warehouse.Warehouse",
+    "Custom Field": "real_fitness.controllers.custom_field.CustomField",
 }
 
 # Fixtures
@@ -114,6 +122,15 @@ fixtures = [
 # Hook on document methods and events
 
 doc_events = {
+    "Patient": {
+        "validate": "real_fitness.controllers.patient.patient.validate",
+    },
+    "Sales Invoice": {
+        "validate": "real_fitness.controllers.sales_invoice.sales_invoice.validate",
+    },
+    "Purchase Invoice": {
+        "validate": "real_fitness.controllers.purchase_invoice.purchase_invoice.validate",
+    },
     "Patient Encounter": {
         "validate": "real_fitness.controllers.patient_encounter.patient_encounter.validate",
     },
@@ -167,6 +184,26 @@ doc_events = {
 # User Data Protection
 # --------------------
 
+user_data_fields = [
+    {
+        "doctype": "{doctype_1}",
+        "filter_by": "{filter_by}",
+        "redact_fields": ["{field_1}", "{field_2}"],
+        "partial": 1,
+    },
+    {
+        "doctype": "{doctype_2}",
+        "filter_by": "{filter_by}",
+        "partial": 1,
+    },
+    {
+        "doctype": "{doctype_3}",
+        "strict": False,
+    },
+    {
+        "doctype": "{doctype_4}"
+    }
+]
 
 # Authentication and authorization
 # --------------------------------
