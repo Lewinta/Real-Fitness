@@ -3,6 +3,7 @@
         frappe.run_serially([
             () => hide_custom_buttons(frm),
             () => add_custom_buttons(frm),
+            () => set_values(frm),
         ]);
     }
 
@@ -92,6 +93,44 @@
 
     }
 
+    function set_values(frm) {
+        frappe.run_serially([
+            () => set_outstanding_amount(frm),
+            () => set_paid_amount(frm),
+            () => set_change(frm),
+        ]);
+    }
+
+    function set_outstanding_amount(frm) {        
+        frm.set_value("outstanding_amount_copy", doc.grand_total);        
+    }
+
+    function set_paid_amount(frm) {
+        const { doc } = frm;
+        let total_paid_amount = 0;
+
+        if (doc.payments){
+            doc.payments.forEach(row => {
+                if(row.type == "Cash"){
+                    total_paid_amount += row.amount;                    
+                }            
+            });
+            frm.set_value("paid_amount_copy", paid_amount);
+        }
+    }
+
+    function set_change(frm) {
+        const { doc } = frm;
+        frm.set_value("change", doc.paid_amount_copy - doc.outstanding_amount_copy);
+    }
+
+    function amount(frm) {
+        set_values(frm);        
+    }
+
+    frappe.ui.form.on("Sales Invoice Payment", {
+        amount,
+    });
 
     frappe.ui.form.on("Sales Invoice", {
         refresh,
