@@ -4,11 +4,17 @@
 import frappe
 import json
 from erpnext.setup.utils import get_exchange_rate
+from frappe.utils.password import check_password
 
 
 def validate(doc, method):
     entry = validate_pos_entry(doc)
     doc.posa_pos_opening_shift = entry
+
+
+def on_submit(doc, method):
+    validate_credit_invoice(doc)
+
 
 
 def validate_pos_entry(doc):
@@ -98,3 +104,53 @@ def get_item_for_procedure(procedure):
         return None
 
     return frappe.get_doc(doctype, name)
+
+@frappe.whitelist()
+def confirm_actual_user_has_permission():
+    """
+    Checks if the actual user has permission to perform the operation.
+
+    Returns:
+        bool: True if the user has permission, False otherwise.
+    """
+    actual_user = frappe.session.user
+    return validate_user_permission(actual_user)
+
+
+@frappe.whitelist()
+def validate_user_and_permission(user, password):
+    """
+    Validates the user's password and checks if the user has permission.
+
+    Args:
+        user (str): The username.
+        password (str): The user's password.
+
+    Returns:
+        bool: True if the user has permission, False otherwise.
+    """
+    try:
+        check_password(user, password)
+    except Exception:
+        frappe.throw("Contraseña incorrecta")     
+
+    has_permission = validate_user_permission(user)
+    return has_permission
+
+def validate_user_permission(user):
+    """
+    Check if the given user has the permission to perform sales invoice operations.
+
+    Args:
+        user (str): The name of the user to check permission for.
+
+    Returns:
+        bool: True if the user has the permission, False otherwise.
+    """
+    has_permission = False
+    user_doc = frappe.get_doc("User", user)
+    for role in user_doc.roles:
+        if role.role == "Supervisor de Ventas":
+            has_permission = True
+            break
+    return has_permission
