@@ -1,0 +1,147 @@
+{
+ "actions": [],
+ "autoname": "autoincrement",
+ "creation": "2024-07-08 17:52:28.813440",
+ "default_view": "List",
+ "doctype": "DocType",
+ "editable_grid": 1,
+ "engine": "InnoDB",
+ "field_order": [
+  "user",
+  "code_expiration",
+  "column_break_swfck",
+  "auto_generate",
+  "code_length",
+  "authorization_code",
+  "section_break_c9l0b",
+  "renew",
+  "re_generate",
+  "additional_info_section",
+  "title",
+  "amended_from",
+  "status",
+  "enabled"
+ ],
+ "fields": [
+  {
+   "fieldname": "section_break_c9l0b",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "code_expiration",
+   "fieldtype": "Date",
+   "label": "Code Expiration"
+  },
+  {
+   "default": "4",
+   "fieldname": "code_length",
+   "fieldtype": "Int",
+   "label": "Code Length",
+   "non_negative": 1,
+   "read_only": 1
+  },
+  {
+   "fieldname": "authorization_code",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "in_standard_filter": 1,
+   "label": "Authorization Code",
+   "mandatory_depends_on": "eval:!doc.auto_generate",
+   "no_copy": 1,
+   "read_only_depends_on": "eval:doc.auto_generate",
+   "set_only_once": 1,
+   "unique": 1
+  },
+  {
+   "fieldname": "user",
+   "fieldtype": "Link",
+   "label": "User",
+   "options": "User",
+   "reqd": 1,
+   "set_only_once": 1
+  },
+  {
+   "default": "1",
+   "fieldname": "auto_generate",
+   "fieldtype": "Check",
+   "label": "Auto-Generate",
+   "set_only_once": 1
+  },
+  {
+   "description": "If you click this button it will clone this entry so you edit in the new one. This one will be kept for history purposes.",
+   "fieldname": "re_generate",
+   "fieldtype": "Button",
+   "label": "Re-generate"
+  },
+  {
+   "fieldname": "renew",
+   "fieldtype": "Button",
+   "label": "Renew"
+  },
+  {
+   "fieldname": "title",
+   "fieldtype": "Data",
+   "label": "Title",
+   "read_only": 1
+  },
+  {
+   "fieldname": "amended_from",
+   "fieldtype": "Link",
+   "label": "Amended From",
+   "no_copy": 1,
+   "options": "Verify Pro",
+   "read_only": 1
+  },
+  {
+   "fieldname": "additional_info_section",
+   "fieldtype": "Section Break",
+   "label": "Additional Info"
+  },
+  {
+   "fieldname": "column_break_swfck",
+   "fieldtype": "Column Break"
+  },
+  {
+   "default": "Active",
+   "fieldname": "status",
+   "fieldtype": "Select",
+   "label": "Status",
+   "no_copy": 1,
+   "options": "Active\nDisabled\nExpired",
+   "read_only": 1
+  },
+  {
+   "default": "1",
+   "depends_on": "eval:!doc.__islocal",
+   "fieldname": "enabled",
+   "fieldtype": "Check",
+   "label": "Enabled",
+   "no_copy": 1
+  }
+ ],
+ "index_web_pages_for_search": 1,
+ "links": [],
+ "modified": "2024-07-09 12:10:52.488908",
+ "modified_by": "Administrator",
+ "module": "Real Fitness",
+ "name": "Verify Pro",
+ "naming_rule": "Autoincrement",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "System Manager",
+   "share": 1,
+   "write": 1
+  }
+ ],
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "states": []
+}

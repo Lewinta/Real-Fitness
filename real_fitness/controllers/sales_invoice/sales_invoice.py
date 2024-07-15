@@ -1,24 +1,45 @@
 # Copyright (c) 2023, Yefri Tavarez and Contributors
 # For license information, please see license.txt
 
-import frappe
+
 import json
-from erpnext.setup.utils import get_exchange_rate
+from typing import Union
+
+import frappe
 from frappe.utils.password import check_password
 
-
-def validate(doc, method):
-    entry = validate_pos_entry(doc)
-    doc.posa_pos_opening_shift = entry
+from erpnext.setup.utils import get_exchange_rate
 
 
-def on_submit(doc, method):
-    validate_credit_invoice(doc)
+CREDIT_CONTROLLER_ROLE = "Supervisor de Ventas"
 
+
+def validate(doc, method=None):
+    doc.posa_pos_opening_shift = validate_pos_entry(doc)
+
+
+def before_submit(doc, method=None):
+    validate_code_if_applies(doc)
+
+
+def validate_code_if_applies(doc):
+    if doc.outstanding_amount <= 0:
+        # we're looking for invoices with outstanding amount
+        return # do nothing if the amount is less than or equal to 0
+
+    if CREDIT_CONTROLLER_ROLE in frappe.get_roles():
+        return # do nothing and returns nothing if the user has the role
+
+    if not doc.code:
+        frappe.throw(
+            "Código de autorización es requerido para facturas con saldo pendiente")
+
+    if not confirm_if_user_made_a_verify_pro(doc.code):
+        frappe.throw("Código de autorización incorrecto")
 
 
 def validate_pos_entry(doc):
-    # All previous Shifts must be closed before starting the day
+    # All previous Shifts must be closed beforeg starting the day
     filters = {
         "docstatus": 1,
         "status": "Open",
@@ -105,6 +126,7 @@ def get_item_for_procedure(procedure):
 
     return frappe.get_doc(doctype, name)
 
+
 @frappe.whitelist()
 def confirm_actual_user_has_permission():
     """
@@ -113,8 +135,8 @@ def confirm_actual_user_has_permission():
     Returns:
         bool: True if the user has permission, False otherwise.
     """
-    actual_user = frappe.session.user
-    return validate_user_permission(actual_user)
+
+    return CREDIT_CONTROLLER_ROLE in frappe.get_roles()
 
 
 @frappe.whitelist()
@@ -132,10 +154,11 @@ def validate_user_and_permission(user, password):
     try:
         check_password(user, password)
     except Exception:
-        frappe.throw("Contraseña incorrecta")     
+        frappe.throw("Contraseña incorrecta")
 
     has_permission = validate_user_permission(user)
     return has_permission
+
 
 def validate_user_permission(user):
     """
@@ -154,3 +177,25 @@ def validate_user_permission(user):
             has_permission = True
             break
     return has_permission
+
+
+@frappe.whitelist()
+def confirm_if_user_made_a_verify_pro(code: Union[str, int]) -> bool:
+    """
+    Check if a user has made a Verify Pro with the given authorization code.
+
+    Args:
+        code (str): The authorization code to check.
+
+    Returns:
+        bool: True if a Verify Pro with the given authorization code and status "Active" exists, False otherwise.
+    """
+    if not code:
+        return False
+
+    return bool(
+        frappe.db.exists("Verify Pro", {
+            "authorization_code": code,
+            "status": "Active"
+        })
+    )

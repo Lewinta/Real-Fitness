@@ -9,7 +9,7 @@
 
     function before_submit(frm) {
         return new Promise((resolve, reject) => {
-            confirm_permission(frm, resolve, reject);
+            request_security_code_if_applies(frm, resolve, reject);
         });
     }
 
@@ -137,80 +137,87 @@
 
     // Validar si el usuario actual tiene permisos para realizar la operacion
     // Validar si la factura es de credito
-    function confirm_permission(frm, resolve, reject){
+    function request_security_code_if_applies(frm, resolve, reject) {
+        const { doc, page } = frm;
+
+        if (doc.outstanding_amount <= 0) {
+            return resolve(); // skip validation if the invoice is not credit
+        }
+
         frappe.call({
             method: "real_fitness.controllers.sales_invoice.sales_invoice.confirm_actual_user_has_permission",
             callback: (response) => {
-                const { message } = response;
-                console.log("message.has_permission", message);
-                if (frm.doc.outstanding_amount > 0){
-                    show_dialog_to_confirm_permission(message, resolve, reject);
+                const { message: has_permission } = response;
+
+                if (has_permission) {
+                    return resolve();
                 } else {
-                    resolve(); 
+                    return request_security_code(frm, resolve, reject);
                 }
             },
             error: function (error) {
-                console.error("Error en confirm_permission:", error);
-                reject(); 
+                page
+                    .btn_primary
+                    .removeAttr("disabled")
+                ;
+
+                return reject();
             }
         });
     }
 
-    function show_dialog_to_confirm_permission(has_permission, resolve, reject) {
-        if (!has_permission) {
-            create_dialog_to_confirm_permission(resolve, reject);
-        } else {
-            resolve(); 
-        }
-    }
-
-    // Pedir al usuario actual que ingrse un usuario que si tenga permisos para realizar la operacion
-    // validar si el usuario tiene permisos para realizar la operacion y si introduce la contraseña correcta
-    function create_dialog_to_confirm_permission(resolve, reject) {
+    function request_security_code(frm, resolve, reject) {
         const fields = [
             {
                 fieldtype: "HTML",
-                options: `<p>Por cuestiones de seguridad, se solicita la aprobación de un usuario con permisos para poder validar esta transacción. Por favor, introduzca los datos de un usuario con los permisos de validar facturas a crédito. ¡Gracias!</p>`
+                options: `<p>Por cuestiones de seguridad, se solicita la 
+                aprobación de un usuario con permisos para poder validar esta transacción. 
+                Por favor, introduzca los datos de un usuario con los permisos de validar 
+                facturas a crédito. ¡Gracias!</p>`
             },
             {
-                label: "User",
-                fieldname: "user",
-                fieldtype: "Link",
-                options: "User",
-            },
-            {
-                label: "Password",
-                fieldname: "password",
-                fieldtype: "Password"
+                label: "Code",
+                fieldname: "code",
+                fieldtype: "Password",
+                reqd: 1,
             },
         ];
+    
+        let ask_for_security_code;
 
-        frappe.prompt(fields, (values) => {
-            frappe.call({
-                method: "real_fitness.controllers.sales_invoice.sales_invoice.validate_user_and_permission",
-                args: {
-                    user: values.user,
-                    password: values.password,
-                },
-                callback: (response) => {
-                    const { message } = response;
-                    if (message) {
-                        frappe.msgprint("Permiso concedido");
-                        resolve(); 
-                    } else {
-                        frappe.throw("Permiso denegado");
-                        reject(); 
+        ask_for_security_code = function() {
+            frappe.prompt(fields, ({ code }) => {
+                frappe.call({
+                    method: "real_fitness.controllers.sales_invoice.sales_invoice.confirm_if_user_made_a_verify_pro",
+                    args: { code },
+                    callback: (response) => {
+                        const { message } = response;
+                        if (message) {                       
+                            frm.set_value("code", code);
+                            return resolve();
+                        } else {
+                            frappe.show_alert({
+                                message: "404: Código de Verificación inválido",
+                                indicator: "red"
+                            });
+                            
+                            setTimeout(ask_for_security_code, 100);
+                        }
+                    },
+                    error: function (error) {
+                        reject();
                     }
-                },
-                error: function (error) {
-                    console.error("Error en show_dialog_to_confirm_permission:", error);
-                    reject(); 
-                }
-            });
-        }).catch((error) => {
-            console.error("Error en frappe.prompt:", error);
-            reject(); 
-        });
+                });
+            }, "Verificación vía Código", "Validar Factura");
+
+            frm
+                .page
+                .btn_primary
+                .removeAttr("disabled")
+            ;
+        }
+    
+        ask_for_security_code();
     }
 
     frappe.ui.form.on("Sales Invoice Payment", {
