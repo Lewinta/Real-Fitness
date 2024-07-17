@@ -121,7 +121,7 @@
  ],
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2024-07-09 12:10:52.488908",
+ "modified": "2024-07-15 18:47:25.786291",
  "modified_by": "Administrator",
  "module": "Real Fitness",
  "name": "Verify Pro",
@@ -143,5 +143,6 @@
  ],
  "sort_field": "modified",
  "sort_order": "DESC",
- "states": []
+ "states": [],
+ "title_field": "user"
 }
